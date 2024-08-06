@@ -1,0 +1,14 @@
+video {
+    /* width: 100%; */
+    object-fit: contain;
+
+    max-width: 100dvw;
+
+    border-radius: 8px;
+}
+
+canvas {
+    /* width: 100% !important; */
+    max-width: 100dvw !important;
+    object-fit: contain;
+}
