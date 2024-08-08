@@ -14,7 +14,11 @@ import Stats from "three/examples/jsm/libs/stats.module";
 import {GUI} from "three/examples/jsm/libs/lil-gui.module.min";
 
 const gameCanvasElement = document.getElementById("game_canvas") as HTMLCanvasElement;
-const renderer = new WebGLRenderer({ alpha: true, canvas: gameCanvasElement });
+const renderer = new WebGLRenderer({ 
+    alpha: true, 
+    canvas: gameCanvasElement, 
+    antialias: true 
+});
 const scene = new Scene();
 const camera = new OrthographicCamera(0, 1, 1, 0, 0, 1000);
 camera.position.z = 500;

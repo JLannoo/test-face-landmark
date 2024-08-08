@@ -276,7 +276,7 @@ async function predictWebcam() {
         }
       }
 
-      // scene.add(mesh);
+      scene.add(mesh);
       mouthMesh = mesh;
     };    
   }
