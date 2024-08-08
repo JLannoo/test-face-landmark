@@ -1,0 +1,40 @@
+body {
+  font-family: roboto;
+  color: #3d3d3d;
+  --mdc-theme-primary: #007f8b;
+  --mdc-theme-on-primary: #f1f3f4;
+
+  margin: 0;
+}
+
+p {
+  margin: 0;
+}
+
+video {
+  clear: both;
+  display: block;
+  
+  max-width: 100%;
+}
+
+.videoView {
+  position: absolute;
+  float: left;
+  width: 48%;
+  margin: 2% 1%;
+  cursor: pointer;
+  min-height: 500px;
+}
+
+.output_canvas {
+  max-width: 100%;
+}
+
+.output {
+  width: 100%;
+  font-size: calc(8px + 1.2vw);
+
+  display: flex;
+  gap: 1rem;
+}

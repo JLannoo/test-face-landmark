@@ -1,5 +1,5 @@
 import { Category, DrawingUtils, FaceLandmarker, FaceLandmarkerResult, FilesetResolver, NormalizedLandmark } from "@mediapipe/tasks-vision";
-import { BufferAttribute, BufferGeometry, DoubleSide, Float32BufferAttribute, Mesh, MeshBasicMaterial, OrthographicCamera, RepeatWrapping, Scene, TextureLoader, Vector3, VideoTexture, WebGLRenderer, WebGLRenderTarget } from "three";
+import { BufferAttribute, BufferGeometry, DoubleSide, Float32BufferAttribute, LineBasicMaterial, Mesh, MeshBasicMaterial, OrthographicCamera, RepeatWrapping, Scene, TextureLoader, Vector3, VideoTexture, WebGLRenderer, WebGLRenderTarget } from "three";
 
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 import { AxesHelper } from "three";
@@ -37,6 +37,7 @@ const MODIFICATIONS = {
   scale: 1,
   flipX: false,
   flipY: false,
+  curvature: 0,
 }
 
 const videoBlendShapes = document.getElementById("video-blend-shapes");
@@ -124,6 +125,7 @@ const modFolder = gui.addFolder("Modifications");
 modFolder.add(MODIFICATIONS, "scale").min(0.1).max(10).step(0.1).name("Scale");
 modFolder.add(MODIFICATIONS, "flipX").name("Flip X");
 modFolder.add(MODIFICATIONS, "flipY").name("Flip Y");
+modFolder.add(MODIFICATIONS, "curvature").min(-1).max(1).step(0.1).name("Curvature");
 
 function drawLoop() {  
   requestAnimationFrame(drawLoop);
@@ -193,6 +195,8 @@ MOUTH_POINTS.forEach(({ start, end }) => {
 
 const MOUTH_INDICES_SORTED = [ 15, 16, 14, 17, 13, 18, 12, 19, 11, 0, 10, 1, 9, 2, 8, 3, 7, 4, 6, 5 ];
 
+const lineMaterial = new LineBasicMaterial({ color: 0xffffff });
+
 async function predictWebcam() {
   const ratio = video.videoHeight / video.videoWidth;
   video.style.width = videoWidth + "px";
@@ -251,9 +255,30 @@ async function predictWebcam() {
       if(MODIFICATIONS.flipX) mesh.scale.x *= -1;
       if(MODIFICATIONS.flipY) mesh.scale.y *= -1;
 
-      scene.add(mesh);
+      if(MODIFICATIONS.curvature && "array" in mesh.geometry.attributes.position) {
+        const vertices = mesh.geometry.attributes.position.array as number[];
+
+        for(let i = 0; i < vertices.length; i+=3) {
+          const [x, y, z] = [vertices[i], vertices[i+1], vertices[i+2]];
+
+          const lineGeometry = new BufferGeometry().setFromPoints([
+            new Vector3(x, y, z),
+            mesh.position,
+          ]);
+          const line = new Mesh(lineGeometry, lineMaterial);
+          
+          scene.add(line);
+
+          const distX = Math.abs(x - mesh.position.x);
+
+          vertices[i+1] = y + Math.sin(distX * MODIFICATIONS.curvature) * 0.1;
+
+        }
+      }
+
+      // scene.add(mesh);
       mouthMesh = mesh;
-    };
+    };    
   }
   
   if(!videoBlendShapes) throw new Error("videoBlendShapes is null");;
