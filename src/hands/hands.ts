@@ -11,7 +11,7 @@ import Game from "./game";
 import { AxesHelper, OrthographicCamera, Scene, WebGLRenderer } from "three";
 
 import Stats from "three/examples/jsm/libs/stats.module";
-
+import {GUI} from "three/examples/jsm/libs/lil-gui.module.min";
 
 const gameCanvasElement = document.getElementById("game_canvas") as HTMLCanvasElement;
 const renderer = new WebGLRenderer({ alpha: true, canvas: gameCanvasElement });
@@ -25,6 +25,11 @@ scene.add(helper);
 
 const stats = new Stats();
 document.body.appendChild(stats.dom);
+
+const gui = new GUI();
+gui.add({ mirrored: true }, "mirrored")
+    .name("Mirror Camera")
+    .onChange(cameraFlip);
 
 let gestureRecognizer: GestureRecognizer;
 
@@ -47,6 +52,12 @@ const canvasCtx = canvasElement.getContext("2d") as CanvasRenderingContext2D;
 
 const gestureOutput = document.getElementById("gesture_output") as HTMLElement;
 
+function cameraFlip(bool: boolean) {
+    video.classList.toggle("mirrored", bool);
+    canvasElement.classList.toggle("mirrored", bool);
+    gameCanvasElement.classList.toggle("mirrored", bool);
+}
+
 navigator.mediaDevices.getUserMedia({ video: true})
     .then(function (stream) {
         video.srcObject = stream;
@@ -63,13 +74,9 @@ navigator.mediaDevices.getUserMedia({ video: true})
             const widthString = (video.videoWidth).toString();
             const heightString = (video.videoHeight).toString();
         
-            gameCanvasElement.style.width = widthString;
-            gameCanvasElement.style.height = heightString;
             gameCanvasElement.setAttribute("width", widthString);
             gameCanvasElement.setAttribute("height", heightString);
 
-            canvasElement.style.width = widthString;
-            canvasElement.style.height = heightString;
             canvasElement.setAttribute("width", widthString);
             canvasElement.setAttribute("height", heightString);
 

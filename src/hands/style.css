@@ -18,17 +18,16 @@ video {
   max-width: 100%;
 }
 
-.videoView {
-  position: absolute;
-  float: left;
-  width: 48%;
-  margin: 2% 1%;
-  cursor: pointer;
-  min-height: 500px;
-}
-
 .output_canvas {
   max-width: 100%;
+}
+
+.game_canvas {
+  max-width: 100%;
+}
+
+.mirrored {
+  transform: rotateY(180deg);
 }
 
 .output {
