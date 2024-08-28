@@ -164,6 +164,8 @@ const meshDrawingUtils = new DrawingUtils(meshCanvasCtx);
 
 let mouthMesh: Mesh;
 
+// Based on
+// https://i.sstatic.net/5Mohl.jpg
 const MOUTH_POINTS = [
   { start: 0, end: 267 },
   { start: 267, end: 269 },
